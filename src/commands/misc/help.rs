@@ -22,10 +22,10 @@ async fn help_specific_command(ctx: Context<'_>, command_name: String) -> MaybeE
                     .eq_ignore_ascii_case(command_name.as_str()))
     });
 
-    match command {
-        None => {
-            ctx.send(|builder| {
-                builder.reply(true);
+    ctx.send(|builder| {
+        builder.reply(true);
+        match command {
+            None => {
                 builder.ephemeral(true);
                 builder.embed(|embed| {
                     embed.color(data.colors.error);
@@ -35,13 +35,9 @@ async fn help_specific_command(ctx: Context<'_>, command_name: String) -> MaybeE
                         cut_excess(command_name.replace('`', ""), 32)
                     ))
                 })
-            })
-            .await?;
-        },
+            },
 
-        Some(command) => {
-            ctx.send(|builder| {
-                builder.reply(true);
+            Some(command) => {
                 builder.embed(|embed| {
                     embed.color(data.colors.info);
 
@@ -69,10 +65,10 @@ async fn help_specific_command(ctx: Context<'_>, command_name: String) -> MaybeE
 
                     embed
                 })
-            })
-            .await?;
-        },
-    }
+            },
+        }
+    })
+    .await?;
 
     Ok(())
 }
